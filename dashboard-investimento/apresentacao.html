@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recrear Ômega - Apresentação Profissional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Hide scrollbar for presentation */
+            background-color: #e9ecef; /* Light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-color: #ffffff;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15); /* More pronounced shadow */
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 100px; /* Increased padding */
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.98); /* Slightly smaller initial scale */
+            transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out, visibility 0.7s ease-in-out;
+            background-color: #ffffff;
+            color: #343a40; /* Darker text for professionalism */
+            text-align: center;
+            overflow: auto; /* Allow scroll if content is too large */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        /* Typography */
+        .slide h1 {
+            font-family: 'Montserrat', sans-serif;
+            color: #4A90E2; /* Professional blue */
+            font-size: 5em; /* Slightly larger */
+            margin-bottom: 25px;
+            letter-spacing: 1.5px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .slide h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: #28a745; /* Green for success/solution */
+            font-size: 3.2em; /* Adjusted size */
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .slide h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: #fd7e14; /* Orange for emphasis */
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .slide p {
+            font-size: 1.4em; /* Slightly larger text */
+            line-height: 1.7;
+            margin-bottom: 25px;
+            max-width: 1000px; /* Wider text block */
+            color: #495057;
+        }
+
+        .slide ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+            font-size: 1.3em;
+            line-height: 1.9;
+            max-width: 1000px;
+            color: #495057;
+        }
+
+        .slide ul li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 35px; /* More space for icon */
+        }
+
+        .slide ul li::before {
+            content: '\f00c'; /* Checkmark icon */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #28a745; /* Green checkmark */
+            display: inline-block;
+            width: 25px; /* Larger icon space */
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        .slide .highlight {
+            color: #4A90E2; /* Professional blue highlight */
+            font-weight: 700;
+        }
+
+        /* Title Slide */
+        .slide.title-slide {
+            background: linear-gradient(to bottom right, #f8f9fa, #e9ecef); /* Subtle gradient */
+        }
+        .slide.title-slide .logo {
+            width: 180px; /* Larger logo */
+            height: auto;
+            margin-bottom: 30px;
+        }
+        .slide.title-slide h1 {
+            font-size: 6.5em;
+            color: #4A90E2;
+            text-shadow: 4px 4px 0 #cce5ff; /* Softer shadow */
+        }
+        .slide.title-slide p {
+            font-size: 2em;
+            color: #6c757d;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+        .slide.title-slide .subtitle {
+            font-size: 1.6em;
+            color: #868e96;
+            margin-top: 40px;
+        }
+        .slide.title-slide .presenters {
+            font-size: 1.4em;
+            color: #adb5bd;
+            margin-top: 10px;
+        }
+        .slide.title-slide .date-location {
+            font-size: 1.3em;
+            color: #adb5bd;
+            margin-top: 10px;
+        }
+
+        /* Executive Summary Slide */
+        .executive-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .summary-item {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: left;
+            border-left: 6px solid #4A90E2;
+            animation: slideInUp 0.8s forwards;
+            opacity: 0;
+        }
+        .summary-item h3 {
+            color: #4A90E2;
+            margin-top: 0;
+            font-size: 1.8em;
+        }
+        .summary-item p {
+            font-size: 1.1em;
+            margin-bottom: 0;
+            color: #555;
+        }
+        .summary-item:nth-child(1) { animation-delay: 0.1s; }
+        .summary-item:nth-child(2) { animation-delay: 0.3s; }
+        .summary-item:nth-child(3) { animation-delay: 0.5s; }
+        .summary-item:nth-child(4) { animation-delay: 0.7s; }
+
+        /* Problem Slide */
+        .slide.problem-slide .highlight {
+            color: #dc3545; /* Red for problem */
+        }
+        .slide.problem-slide ul li::before {
+            content: '\f06a'; /* Exclamation triangle icon */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #dc3545;
+        }
+
+        /* Solution Slide */
+        .slide.solution-slide .highlight {
+            color: #28a745; /* Green for solution */
+        }
+        .slide.solution-slide ul li::before {
+            content: '\f058'; /* Check circle icon */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #28a745;
+        }
+
+        /* How it Works & Dashboard */
+        .how-it-works-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .how-it-works-steps {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 50px; /* Increased gap */
+            margin-top: 40px;
+            width: 100%;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 280px; /* Wider steps */
+            text-align: center;
+        }
+        .step i {
+            font-size: 3.5em; /* Larger icons */
+            color: #fd7e14;
+            margin-bottom: 20px;
+            animation: bounceIn 0.9s forwards;
+            opacity: 0;
+        }
+        .step p {
+            font-size: 1.1em; /* Adjusted text size */
+            margin-top: 10px;
+            color: #6c757d;
+        }
+
+        .dashboard-mockup {
+            margin-top: 60px;
+            width: 90%;
+            max-width: 900px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+            border-radius: 15px;
+            overflow: hidden;
+            animation: fadeIn 1.2s ease-out forwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            min-height: 250px; /* More height */
+            padding: 30px;
+        }
+        .dashboard-mockup img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        .dashboard-mockup .nav-button {
+            background-color: #4A90E2;
+            padding: 18px 35px; /* Larger button */
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.2em; /* Larger text */
+            color: white;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .dashboard-mockup .nav-button:hover {
+            background-color: #357ABD;
+            transform: translateY(-3px);
+        }
+        .dashboard-mockup .nav-button i {
+            margin-right: 12px;
+        }
+
+        /* Market Data Slide */
+        .market-data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 50px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .market-data-item {
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-bottom: 6px solid #28a745;
+            animation: fadeIn 0.8s forwards;
+            opacity: 0;
+        }
+        .market-data-item h3 {
+            color: #28a745;
+            margin-top: 0;
+            font-size: 2em;
+        }
+        .market-data-item p {
+            font-size: 1.2em;
+            margin-bottom: 0;
+            color: #555;
+        }
+        .market-data-item .data-value {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: #4A90E2;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Competitive Advantage Slide */
+        .comparison-table {
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 40px;
+            border-collapse: collapse;
+            font-size: 1.2em;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #dee2e6;
+            padding: 15px 20px;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: #4A90E2;
+            color: white;
+            font-weight: 600;
+            font-size: 1.3em;
+        }
+        .comparison-table td {
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+        .comparison-table td.advantage {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .comparison-table td.disadvantage {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        /* Testimonials */
+        .testimonial-container {
+            display: flex;
+            flex-direction: column;
+            gap: 35px; /* Increased gap */
+            max-width: 1000px;
+            margin-top: 40px;
+        }
+        .testimonial-box {
+            background-color: #f8f9fa;
+            border-left: 6px solid #4A90E2; /* Blue border */
+            padding: 25px 35px;
+            border-radius: 10px;
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            animation: slideInUp 0.7s ease-out forwards;
+            opacity: 0;
+        }
+        .testimonial-box p {
+            font-size: 1.2em; /* Larger quotes */
+            font-style: italic;
+            margin-bottom: 15px;
+            max-width: 100%;
+            color: #555;
+        }
+        .testimonial-box span {
+            display: block;
+            font-weight: 600;
+            color: #fd7e14; /* Orange for names */
+            font-size: 1.1em;
+            text-align: right;
+        }
+
+        /* Charts (Revenue & Costs) */
+        .chart-container {
+            width: 70%; /* Smaller charts for more content space */
+            max-width: 700px;
+            margin-top: 50px;
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Roadmap */
+        .roadmap-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1100px;
+            margin-top: 40px;
+        }
+        .roadmap-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 40px; /* More space */
+            position: relative;
+            justify-content: center; /* Center items for timeline feel */
+        }
+        .roadmap-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -25px; /* Adjust line position */
+            width: 3px; /* Thicker line */
+            height: 60px; /* Longer line */
+            background-color: #adb5bd; /* Neutral line color */
+            transform: translateX(-50%);
+            z-index: 5;
+        }
+        .roadmap-circle {
+            width: 70px; /* Larger circle */
+            height: 70px;
+            border-radius: 50%;
+            background-color: #4A90E2;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em; /* Larger number */
+            font-weight: 700;
+            flex-shrink: 0;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: bounceIn 0.8s forwards;
+            opacity: 0;
+            position: relative; /* For the line */
+        }
+        .roadmap-content {
+            flex-grow: 1;
+            padding: 0 50px; /* More padding */
+            text-align: left;
+            animation: slideInUp 0.8s forwards;
+            opacity: 0;
+            max-width: 700px; /* Limit width of content */
+        }
+        .roadmap-content h3 {
+            margin-top: 0;
+            color: #fd7e14; /* Orange for roadmap headings */
+            font-size: 2em;
+        }
+        .roadmap-content p {
+            font-size: 1.2em;
+            margin-bottom: 0;
+            max-width: 100%;
+        }
+
+        /* Team Slide */
+        .team-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 50px;
+            max-width: 1200px;
+        }
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 250px;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s forwards;
+            opacity: 0;
+        }
+        .team-member img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 4px solid #4A90E2;
+        }
+        .team-member h3 {
+            margin: 0;
+            color: #4A90E2;
+            font-size: 1.6em;
+        }
+        .team-member p {
+            font-size: 1em;
+            color: #6c757d;
+            margin-top: 5px;
+            margin-bottom: 0;
+        }
+
+        /* Final Slide */
+        .slide.thanks-slide h2 {
+            color: #4A90E2;
+        }
+        .slide.thanks-slide .call-to-action {
+            font-size: 2em;
+            margin-top: 40px;
+            color: #28a745; /* Green for call to action */
+            font-weight: 700;
+        }
+        .slide.thanks-slide .contact-info {
+            font-size: 1.5em;
+            margin-top: 60px;
+            color: #6c757d;
+        }
+
+        /* Navigation Controls */
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 40px;
+            display: flex;
+            gap: 25px;
+            z-index: 1000;
+        }
+        .nav-button {
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            padding: 18px 35px; /* Larger buttons */
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .nav-button:hover {
+            background-color: #357ABD;
+            transform: translateY(-3px);
+        }
+        .nav-button:active {
+            transform: translateY(0);
+        }
+        .nav-button:disabled {
+            background-color: #ced4da;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px; /* Thicker bar */
+            background-color: #e9ecef;
+            z-index: 1001;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #28a745; /* Green progress */
+            transition: width 0.3s ease-out;
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.2); opacity: 0; }
+            50% { transform: scale(1.15); opacity: 1; }
+            70% { transform: scale(0.95); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Specific animations for slide elements */
+        .slide.active p,
+        .slide.active ul li {
+            animation: slideInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        .slide.active ul li:nth-child(1) { animation-delay: 0.1s; }
+        .slide.active ul li:nth-child(2) { animation-delay: 0.2s; }
+        .slide.active ul li:nth-child(3) { animation-delay: 0.3s; }
+        .slide.active ul li:nth-child(4) { animation-delay: 0.4s; }
+        .slide.active ul li:nth-child(5) { animation-delay: 0.5s; }
+        .slide.active ul li:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="slide active title-slide" id="slide-title">
+            <img src="/Recrear_Omega_Logo.png" alt="Logo Recrear Ômega" class="logo">
+            <h1>Recrear Ômega</h1>
+            <p>Conectando a Magia da Recreação à Eficiência Digital</p>
+            <p class="subtitle">Faculdade Alpha | Inovação e Empreendedorismo</p>
+            <p class="presenters">Participantes: Alendre Maciel, Ícaro Azevedo, Brendo Ruan, Guilherme</p>
+            <p class="date-location">Recife, Junho de 2025</p>
+        </div>
+
+        <div class="slide" id="slide-executive-summary">
+            <h2>Sumário Executivo</h2>
+            <div class="executive-summary-grid">
+                <div class="summary-item">
+                    <h3>O Problema</h3>
+                    <p>Desorganização e dificuldade na contratação de recreadores no mercado infantil, resultando em perda de tempo e qualidade comprometida.</p>
+                </div>
+                <div class="summary-item">
+                    <h3>Nossa Solução</h3>
+                    <p>Plataforma digital intuitiva para conectar empresas e recreadores, otimizando o processo de contratação com transparência e eficiência.</p>
+                </div>
+                <div class="summary-item">
+                    <h3>Modelo de Negócio</h3>
+                    <p>Receita diversificada através de assinaturas premium, comissões por evento e publicidade, garantindo sustentabilidade e escalabilidade.</p>
+                </div>
+                <div class="summary-item">
+                    <h3>Visão de Futuro</h3>
+                    <p>Expandir para clientes finais, integrar novas funcionalidades e consolidar o Recrear Ômega como o hub principal do setor.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide problem-slide" id="slide-problem">
+            <h2>O Problema: Uma Bagunça nos Bastidores da Recreação</h2>
+            <p>No vibrante mundo da recreação infantil, existe uma dor silenciosa e desorganizada que afeta empresas e recreadores autônomos. A busca por profissionais confiáveis e disponíveis é um verdadeiro desafio.</p>
+            <ul>
+                <li><p>Empresas dependem de <span class="highlight">grupos de WhatsApp</span> para encontrar recreadores, gerando <span class="highlight">incerteza e falta de profissionalismo.</span></p></li>
+                <li><p>Dificuldade em verificar <span class="highlight">disponibilidade e o perfil real</span> dos profissionais antes de um evento.</p></li>
+                <li><p>Contratações de <span class="highlight">emergência com profissionais desconhecidos</span> podem comprometer a qualidade do evento.</p></li>
+                <li><p>Recreadores autônomos <span class="highlight">não têm um canal centralizado</span> para encontrar oportunidades, perdendo tempo e visibilidade.</p></li>
+            </ul>
+        </div>
+
+        <div class="slide solution-slide" id="slide-solution">
+            <h2>Nossa Solução: Recrear Ômega - Organização e Qualidade ao seu Alcance</h2>
+            <p>O Recrear Ômega é a plataforma digital inovadora que resolve a desorganização, conectando empresas de recreação infantil a recreadores autônomos de forma prática, rápida e transparente.</p>
+            <ul>
+                <li><p><span class="highlight">Substituímos o WhatsApp</span> por um sistema inteligente e centralizado.</p></li>
+                <li><p>Perfis completos: <span class="highlight">especialidades, experiência, avaliações, fotos e redes sociais.</span></p></li>
+                <li><p>Automação de notificações, agendamentos e comunicação, <span class="highlight">otimizando tempo e garantindo segurança.</span></p></li>
+                <li><p>Transparência na escolha, <span class="highlight">visibilidade para os melhores profissionais.</span></p></li>
+            </ul>
+        </div>
+
+        <div class="slide" id="slide-how-it-works">
+            <h2>Como Funciona: Conectando Profissionais e Eventos</h2>
+            <div class="how-it-works-content">
+                <div class="how-it-works-steps">
+                    <div class="step">
+                        <i class="fas fa-bullhorn"></i>
+                        <h3>1. Empresa Publica</h3>
+                        <p>Detalhes do evento: data, local, tipo, valor e número de recreadores necessários.</p>
+                    </div>
+                    <div class="step">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>2. Recreadores Recebem</h3>
+                        <p>Notificação instantânea no app para aceitar ou recusar a oportunidade.</p>
+                    </div>
+                    <div class="step">
+                        <i class="fas fa-user-check"></i>
+                        <h3>3. Empresa Escolhe</h3>
+                        <p>Analisa perfis completos, avaliações e seleciona os melhores profissionais.</p>
+                    </div>
+                    <div class="step">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>4. Confirmação Automática</h3>
+                        <p>O recreador é notificado, e sua agenda no app é preenchida automaticamente.</p>
+                    </div>
+                </div>
+                <div class="dashboard-mockup">
+                    <p style="font-size: 1.2em; color: #555; margin-bottom: 25px;">Curioso para ver em ação? Explore nosso dashboard interativo:</p>
+                    <a href="dashboard_empresa.html" target="_blank" class="nav-button">
+                        <i class="fas fa-desktop"></i> Ver Dashboard da Empresa
+                    </a>
+                    <p class="dashboard-caption" style="margin-top: 20px; font-size: 1.1em; color: #868e96;">Visualização: Interface da empresa para gerenciamento de eventos.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-segmento">
+            <h2>Nossos Clientes: O Coração da Recreação</h2>
+            <p>Atuamos no segmento de recreação infantil, focando em:</p>
+            <ul>
+                <li><p><span class="highlight">Empresas de Recreação:</span> Que buscam agilidade, qualidade e profissionais confiáveis para seus eventos.</p></li>
+                <li><p><span class="highlight">Recreadores Autônomos:</span> Que precisam de oportunidades organizadas, visibilidade profissional e facilidade na gestão de sua agenda.</p></li>
+                <li><p><span class="highlight">Futuramente - Clientes Finais (Pais/Responsáveis):</span> Buscando empresas e serviços de recreação de forma segura e transparente.</p></li>
+            </ul>
+            <p style="font-size: 1.1em; margin-top: 30px; color: #6c757d;">Nossa ideia surgiu da necessidade real identificada no mercado, validada por nossos primeiros parceiros.</p>
+        </div>
+
+        <div class="slide" id="slide-market-data">
+            <h2>Dados de Mercado: O Potencial da Recreação</h2>
+            <p>O mercado de recreação infantil apresenta um crescimento robusto, impulsionado pela demanda por eventos personalizados e a valorização do tempo de qualidade para as famílias.</p>
+            <div class="market-data-grid">
+                <div class="market-data-item">
+                    <h3>Tamanho do Mercado (Estimado)</h3>
+                    <span class="data-value">R$ 1.5 Bi+</span>
+                    <p>Anualmente no Brasil para eventos infantis.</p>
+                </div>
+                <div class="market-data-item">
+                    <h3>Crescimento Anual</h3>
+                    <span class="data-value">8-10%</span>
+                    <p>Projeção de crescimento do setor nos próximos 5 anos.</p>
+                </div>
+                <div class="market-data-item">
+                    <h3>Digitalização</h3>
+                    <span class="data-value">Crescente</span>
+                    <p>Adoção de plataformas digitais para serviços infantis.</p>
+                </div>
+                <div class="market-data-item">
+                    <h3>Profissionais Autônomos</h3>
+                    <span class="data-value">Alta Demanda</span>
+                    <p>Necessidade de conexão eficiente entre empresas e freelancers.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-competitive-advantage">
+            <h2>Diferenciais Competitivos: Recrear Ômega x Status Quo</h2>
+            <p>Veja como o Recrear Ômega se destaca das soluções atuais:</p>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Recurso</th>
+                        <th>Grupos de WhatsApp</th>
+                        <th>Recrear Ômega</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Organização da Busca</strong></td>
+                        <td class="disadvantage">Baixa (informal, caótica)</td>
+                        <td class="advantage">Alta (filtros, perfis, agenda)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Qualidade/Confiança</strong></td>
+                        <td class="disadvantage">Difícil (sem histórico, avaliações)</td>
+                        <td class="advantage">Alta (perfis verificados, avaliações mútuas)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Otimização de Tempo</strong></td>
+                        <td class="disadvantage">Baixa (mensagens individuais, espera)</td>
+                        <td class="advantage">Alta (automação, notificações)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Visibilidade Profissional</strong></td>
+                        <td class="disadvantage">Limitada (apenas para contatos)</td>
+                        <td class="advantage">Ampla (exposição a várias empresas)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gestão de Agenda</strong></td>
+                        <td class="disadvantage">Manual, propensa a erros</td>
+                        <td class="advantage">Automática, integrada ao app</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="slide" id="slide-canais">
+            <h2>Relacionamento e Canais: Conectando Experiências</h2>
+            <div style="display: flex; gap: 60px; justify-content: center; max-width: 1000px; margin: auto;">
+                <div style="flex: 1; text-align: left;">
+                    <h3>Relacionamento com Clientes</h3>
+                    <ul>
+                        <li><p>Notificações instantâneas (App e WhatsApp).</p></li>
+                        <li><p>Chat interno e seguro entre empresa e recreador.</p></li>
+                        <li><p>Sistema de avaliações mútuas para feedback contínuo.</p></li>
+                        <li><p>Suporte dedicado via e-mail e redes sociais.</p></li>
+                    </ul>
+                </div>
+                <div style="flex: 1; text-align: left;">
+                    <h3>Canais de Distribuição e Divulgação</h3>
+                    <ul>
+                        <li><p><span class="highlight">Aplicativo mobile</span> (Android, iOS em desenvolvimento).</p></li>
+                        <li><p>Plataforma web robusta para gestão.</p></li>
+                        <li><p>Estratégias de marketing digital em redes sociais.</p></li>
+                        <li><p>Parcerias estratégicas com empresas e eventos do setor.</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-atividades">
+            <h2>Atividades e Recursos-Chave: A Engrenagem do Recrear Ômega</h2>
+            <div style="display: flex; gap: 60px; justify-content: center; max-width: 1000px; margin: auto;">
+                <div style="flex: 1; text-align: left;">
+                    <h3>Atividades-Chave (O que fazemos?)</h3>
+                    <ul>
+                        <li><p>Desenvolvimento e manutenção contínua do app/web.</p></li>
+                        <li><p>Suporte técnico e atendimento de excelência.</p></li>
+                        <li><p>Processo rigoroso de verificação de perfis.</p></li>
+                        <li><p>Gestão de comunicação e estratégias de retenção.</p></li>
+                        <li><p>Análise de dados para melhoria contínua e inovação.</p></li>
+                    </ul>
+                </div>
+                <div style="flex: 1; text-align: left;">
+                    <h3>Recursos-Chave (Como fazemos?)</h3>
+                    <ul>
+                        <li><p>Plataforma tecnológica segura e escalável.</p></li>
+                        <li><p>Banco de dados robusto com redundância.</p></li>
+                        <li><p>Integração com APIs de comunicação e agenda (WhatsApp, Google Agenda).</p></li>
+                        <li><p>Equipe multidisciplinar de TI, marketing e atendimento.</p></li>
+                        <li><p>Conhecimento aprofundado do mercado de recreação.</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-parcerias">
+            <h2>Parcerias-Chave: Crescendo Juntos</h2>
+            <p>Nossas parcerias estratégicas são fundamentais para o sucesso e crescimento exponencial do Recrear Ômega.</p>
+            <ul>
+                <li><p><span class="highlight">Empresas de Recreação:</span> Nossos primeiros validadores e parceiros estratégicos.</p></li>
+                <li><p>Desenvolvedores e Empresas de Tecnologia para escalabilidade.</p></li>
+                <li><p>Plataformas de Pagamento e Notificações (ex: Stripe, Twilio).</p></li>
+                <li><p>Redes Sociais e Influenciadores digitais do setor infantil.</p></li>
+                <li><p>Organizadores de Eventos e Feiras de Recreação para captação.</p></li>
+            </ul>
+        </div>
+
+        <div class="slide" id="slide-testimonials">
+            <h2>Validação no Mercado: O Que Nossos Parceiros Dizem</h2>
+            <p>A Recrear Ômega já nasce com o respaldo de empresas e profissionais que entendem a necessidade de organização e eficiência no setor.</p>
+            <div class="testimonial-container">
+                <div class="testimonial-box">
+                    <p>"O Recrear Ômega é a solução que faltava para organizar nossas contratações e encontrar os melhores recreadores com agilidade! Um verdadeiro game-changer para o nosso negócio."</p>
+                    <span>- Rodrigo, Dono da Rod Kids</span>
+                </div>
+                <div class="testimonial-box">
+                    <p>"Acabou a dor de cabeça com os grupos de WhatsApp. Agora temos perfis completos e agendamento na palma da mão. A qualidade dos profissionais aumentou e a gestão ficou transparente. É um divisor de águas!"</p>
+                    <span>- Cibelly Gomes, Dona da Beluska Diversões</span>
+                </div>
+                <div class="testimonial-box">
+                    <p>"Como recreador, ter um local centralizado para ver e aceitar eventos é incrível. Mais oportunidades, menos burocracia e a certeza de trabalhar com empresas sérias. Recrear Ômega transformou minha rotina!"</p>
+                    <span>- Tio GG, Recreador Autônomo</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-revenue">
+            <h2>Fontes de Receita: Nosso Modelo de Negócio Sustentável</h2>
+            <p>O Recrear Ômega possui um modelo de receita diversificado e escalável, garantindo a sustentabilidade e o reinvestimento contínuo na plataforma.</p>
+            <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <ul>
+                <li><p><span class="highlight">Assinaturas Premium:</span> Para empresas com destaque de perfil, acesso a relatórios avançados e recursos extras.</p></li>
+                <li><p><span class="highlight">Taxas Administrativas/Comissão:</span> Pequena porcentagem sobre o valor de eventos fechados com sucesso pela plataforma.</p></li>
+                <li><p>Publicidade segmentada para produtos e serviços complementares ao setor infantil.</p></li>
+                <li><p>Venda de serviços extras como destaque de perfil para recreadores e pacotes de anúncios.</p></li>
+            </ul>
+        </div>
+
+        <div class="slide" id="slide-costs">
+            <h2>Estrutura de Custos: Investimento em Qualidade e Crescimento</h2>
+            <p>Nossos custos são estrategicamente focados em desenvolvimento, tecnologia, marketing e suporte, visando a entrega de um serviço de excelência e a expansão do negócio.</p>
+            <div class="chart-container">
+                <canvas id="costChart"></canvas>
+            </div>
+            <ul>
+                <li><p><span class="highlight">Desenvolvimento e Manutenção do App:</span> Incluindo novas funcionalidades e atualizações de segurança.</p></li>
+                <li><p>Infraestrutura em nuvem (servidores, bancos de dados, segurança cibernética).</p></li>
+                <li><p>Marketing e publicidade para aquisição e retenção de usuários.</p></li>
+                <li><p>Suporte ao cliente e equipe administrativa para garantir o bom funcionamento.</p></li>
+                <li><p>Parcerias e integrações com outras plataformas para expandir o ecossistema.</p></li>
+            </ul>
+        </div>
+
+        <div class="slide" id="slide-financial-projections">
+            <h2>Projeções Financeiras: Um Futuro de Crescimento</h2>
+            <p>Com base em nossa validação de mercado e modelo de negócio, projetamos um crescimento consistente nos próximos anos.</p>
+            <div class="chart-container">
+                <canvas id="growthChart"></canvas>
+            </div>
+            <div style="margin-top: 40px; width: 80%; max-width: 900px;">
+                <h3>Metas de Usuários Ativos (Mensal)</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Ano</th>
+                            <th>Empresas Ativas</th>
+                            <th>Recreadores Ativos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Ano 1</strong></td>
+                            <td>200</td>
+                            <td>1.000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ano 2</strong></td>
+                            <td>750</td>
+                            <td>4.000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ano 3</strong></td>
+                            <td>2.000</td>
+                            <td>10.000+</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-team">
+            <h2>Nossa Equipe: O Motor do Recrear Ômega</h2>
+            <p>Conheça os profissionais dedicados por trás da visão e execução do Recrear Ômega.</p>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="/Alendre.jpg" alt="Foto Alendre Maciel">
+                    <h3>Alendre Maciel</h3>
+                    <p>CEO & Estratégia de Negócios</p>
+                    <p style="font-size: 0.9em; margin-top: 5px;">Visão e liderança para o crescimento do Recrear Ômega.</p>
+                </div>
+                <div class="team-member">
+                    <img src="/Icaro.png" alt="Foto Ícaro Azevedo">
+                    <h3>Ícaro Azevedo</h3>
+                    <p>CTO & Desenvolvimento de Produto</p>
+                    <p style="font-size: 0.9em; margin-top: 5px;">Arquiteto da solução tecnológica.</p>
+                </div>
+                <div class="team-member">
+                    <img src="/icone pessoa.jpg" alt="Foto Brendo Ruan">
+                    <h3>Brendo Ruan</h3>
+                    <p>Marketing & Comunicação</p>
+                    <p style="font-size: 0.9em; margin-top: 5px;">Responsável por nossa voz no mercado.</p>
+                </div>
+                <div class="team-member">
+                    <img src="/icone pessoa.jpg" alt="Foto Guilherme">
+                    <h3>Guilherme</h3>
+                    <p>Operações & Suporte ao Cliente</p>
+                    <p style="font-size: 0.9em; margin-top: 5px;">Garante a excelência no atendimento e na operação diária.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-future">
+            <h2>Visão de Futuro: Um Roadmap para o Crescimento Sustentável</h2>
+            <p>Nossa jornada continua com expansões estratégicas para consolidar o Recrear Ômega como a principal plataforma do setor em todo o Brasil.</p>
+            <div class="roadmap-container">
+                <div class="roadmap-item">
+                    <div class="roadmap-circle">1</div>
+                    <div class="roadmap-content">
+                        <h3>Fase 1: Lançamento e Consolidação (1º Ano)</h3>
+                        <p>Foco total em empresas de recreação e recreadores autônomos. Aprimoramento da plataforma com base no feedback inicial, estabilização e otimização das funcionalidades chave.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-circle">2</div>
+                    <div class="roadmap-content">
+                        <h3>Fase 2: Expansão para Clientes Finais (2º Ano)</h3>
+                        <p>Inclusão de pais e responsáveis, com funcionalidades de busca de empresas, solicitação de orçamentos, avaliações detalhadas e pagamentos seguros via app. Ampliação das vendas e alcance de mercado.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-circle">3</div>
+                    <div class="roadmap-content">
+                        <h3>Fase 3: Novas Funcionalidades e Escala Nacional (3º Ano+)</h3>
+                        <p>Integrações adicionais com sistemas de gestão de eventos, expansão para outras regiões do país, introdução de novos tipos de eventos (ex: corporativos) e aprimoramento constante da inteligência da plataforma com IA.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-next-steps">
+            <h2>Próximos Passos: O Caminho para o Sucesso</h2>
+            <p>Para transformarmos essa visão em realidade e escalar o Recrear Ômega, focaremos nas seguintes etapas cruciais:</p>
+            <ul>
+                <li><p><span class="highlight">Captação de Investimento:</span> Buscar parceiros e investidores que acreditem no potencial do Recrear Ômega.</p></li>
+                <li><p><span class="highlight">Desenvolvimento da Versão iOS:</span> Lançamento do aplicativo para a plataforma iOS para ampliar o alcance.</p></li>
+                <li><p><span class="highlight">Expansão de Equipe:</span> Contratar talentos em desenvolvimento, marketing e operações para acelerar o crescimento.</p></li>
+                <li><p><span class="highlight">Lançamento de Campanha de Marketing:</span> Ampla divulgação para empresas e recreadores em todo o Brasil.</p></li>
+                <li><p><span class="highlight">Primeiras Parcerias Estratégicas:</span> Firmar acordos com grandes players do setor para validação e tração inicial.</p></li>
+            </ul>
+        </div>
+
+        <div class="slide thanks-slide" id="slide-thanks">
+            <img src="https://via.placeholder.com/200x200?text=Obrigado" alt="Agradecimento" style="margin-bottom: 30px; border-radius: 50%;">
+            <h2>Obrigado!</h2>
+            <p>Juntos, podemos transformar o mercado de recreação infantil e levar a magia a um novo nível de profissionalismo.</p>
+            <p class="call-to-action">**Invista na organização e no futuro da recreação!**</p>
+            <p class="contact-info">Contato: alendrek10@gmail.com</p>
+            <p class="contact-info">Site: recrearomega.com (URL hipotética)</p>
+            <div style="margin-top: 30px; font-size: 2em; color: #4A90E2;">
+                <a href="https://www.linkedin.com/in/seuperfil" target="_blank" style="color: inherit; margin: 0 15px;"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.instagram.com/seuperfil" target="_blank" style="color: inherit; margin: 0 15px;"><i class="fab fa-instagram"></i></a>
+                <a href="mailto:alendrek10@gmail.com" style="color: inherit; margin: 0 15px;"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-button" id="prevBtn">Anterior</button>
+            <button class="nav-button" id="nextBtn">Próximo</button>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+
+        function updateProgressBar() {
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function resetAndAnimateElements(slide) {
+            slide.querySelectorAll('p, ul li, .step i, .testimonial-box, .roadmap-circle, .roadmap-content, .summary-item, .market-data-item, .team-member').forEach(el => {
+                el.style.opacity = '0';
+                el.style.animation = 'none';
+            });
+        }
+
+        function showSlide(index) {
+            if (index < 0 || index >= slides.length) return;
+
+            // Deactivate current slide and reset its animations
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+                resetAndAnimateElements(slide);
+            });
+
+            currentSlide = index;
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Apply animations for elements in the active slide
+            activeSlide.querySelectorAll('p, ul li').forEach((el, elIndex) => {
+                el.style.animation = `slideInUp 0.6s ease-out forwards ${0.1 * elIndex + 0.1}s`;
+            });
+
+            if (activeSlide.id === 'slide-executive-summary') {
+                activeSlide.querySelectorAll('.summary-item').forEach((item, itemIndex) => {
+                    item.style.animation = `slideInUp 0.8s forwards ${0.2 * itemIndex + 0.1}s`;
+                });
+            }
+
+            if (activeSlide.id === 'slide-how-it-works') {
+                activeSlide.querySelectorAll('.step i').forEach((icon, iconIndex) => {
+                    icon.style.animation = `bounceIn 0.8s forwards ${0.2 * iconIndex + 0.1}s`;
+                });
+                const dashboard = activeSlide.querySelector('.dashboard-mockup');
+                if (dashboard) {
+                    dashboard.style.animation = 'fadeIn 1s ease-out forwards 1s';
+                    const dashboardButton = dashboard.querySelector('.nav-button');
+                    if (dashboardButton) {
+                        dashboardButton.style.animation = 'slideInUp 0.6s ease-out forwards 1.2s';
+                    }
+                }
+            }
+
+            if (activeSlide.id === 'slide-market-data') {
+                activeSlide.querySelectorAll('.market-data-item').forEach((item, itemIndex) => {
+                    item.style.animation = `fadeIn 0.8s forwards ${0.2 * itemIndex + 0.1}s`;
+                });
+            }
+
+            if (activeSlide.id === 'slide-testimonials') {
+                activeSlide.querySelectorAll('.testimonial-box').forEach((box, boxIndex) => {
+                    box.style.animation = `slideInUp 0.7s ease-out forwards ${0.1 * boxIndex + 0.1}s`;
+                });
+            }
+
+            if (activeSlide.id === 'slide-future') {
+                activeSlide.querySelectorAll('.roadmap-item').forEach((item, itemIndex) => {
+                    const circle = item.querySelector('.roadmap-circle');
+                    const content = item.querySelector('.roadmap-content');
+                    if (circle) circle.style.animation = `bounceIn 0.8s forwards ${0.4 * itemIndex + 0.1}s`;
+                    if (content) content.style.animation = `slideInUp 0.8s forwards ${0.4 * itemIndex + 0.3}s`;
+                });
+            }
+
+            if (activeSlide.id === 'slide-team') {
+                activeSlide.querySelectorAll('.team-member').forEach((member, memberIndex) => {
+                    member.style.animation = `fadeIn 0.8s forwards ${0.2 * memberIndex + 0.1}s`;
+                });
+            }
+
+            // Chart Rendering
+            if (activeSlide.id === 'slide-revenue') {
+                renderRevenueChart();
+            } else if (window.revenueChartInstance) {
+                window.revenueChartInstance.destroy();
+                window.revenueChartInstance = null;
+            }
+            
+            if (activeSlide.id === 'slide-costs') {
+                renderCostChart();
+            } else if (window.costChartInstance) {
+                window.costChartInstance.destroy();
+                window.costChartInstance = null;
+            }
+
+            if (activeSlide.id === 'slide-financial-projections') {
+                renderGrowthChart();
+            } else if (window.growthChartInstance) {
+                window.growthChartInstance.destroy();
+                window.growthChartInstance = null;
+            }
+
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            updateProgressBar();
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { // Spacebar for next
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Chart.js Configuration
+        function renderRevenueChart() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            if (window.revenueChartInstance) {
+                window.revenueChartInstance.destroy();
+            }
+            window.revenueChartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Assinaturas Premium', 'Comissão por Evento', 'Publicidade', 'Serviços Extras'],
+                    datasets: [{
+                        label: 'Fontes de Receita',
+                        data: [45, 30, 15, 10], /* Adjusted percentages */
+                        backgroundColor: ['#4A90E2', '#28a745', '#fd7e14', '#A2D5F2'],
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { size: 16, family: 'Poppins' },
+                                color: '#343a40'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Proporção Estimada das Fontes de Receita',
+                            font: { size: 20, family: 'Montserrat', weight: '600' },
+                            color: '#343a40'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderCostChart() {
+            const ctx = document.getElementById('costChart').getContext('2d');
+            if (window.costChartInstance) {
+                window.costChartInstance.destroy();
+            }
+            window.costChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Desenvolvimento/Manutenção', 'Infraestrutura (Servidores)', 'Marketing', 'Suporte/Adm.', 'Parcerias/Integrações'],
+                    datasets: [{
+                        label: 'Estrutura de Custos',
+                        data: [40, 20, 20, 10, 10], /* Adjusted percentages */
+                        backgroundColor: ['#4A90E2', '#28a745', '#fd7e14', '#A2D5F2', '#C7CEEA'],
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { size: 16, family: 'Poppins' },
+                                color: '#343a40'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribuição Estimada dos Custos',
+                            font: { size: 20, family: 'Montserrat', weight: '600' },
+                            color: '#343a40'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderGrowthChart() {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            if (window.growthChartInstance) {
+                window.growthChartInstance.destroy();
+            }
+            window.growthChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2025 (Ano 1)', '2026 (Ano 2)', '2027 (Ano 3)'],
+                    datasets: [
+                        {
+                            label: 'Receita Projetada (em milhões R$)',
+                            data: [0.5, 2.5, 6.0], /* Example revenue growth */
+                            borderColor: '#4A90E2',
+                            backgroundColor: 'rgba(74, 144, 226, 0.2)',
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#4A90E2',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { size: 16, family: 'Poppins' },
+                                color: '#343a40'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Projeção de Receita Anual',
+                            font: { size: 20, family: 'Montserrat', weight: '600' },
+                            color: '#343a40'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += 'R$ ' + context.parsed.y.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Ano',
+                                font: { size: 16, family: 'Poppins' },
+                                color: '#343a40'
+                            },
+                            ticks: {
+                                font: { size: 14, family: 'Poppins' },
+                                color: '#343a40'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Receita (Milhões R$)',
+                                font: { size: 16, family: 'Poppins' },
+                                color: '#343a40'
+                            },
+                            ticks: {
+                                callback: function(value, index, ticks) {
+                                    return 'R$ ' + value.toLocaleString('pt-BR');
+                                },
+                                font: { size: 14, family: 'Poppins' },
+                                color: '#343a40'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initial slide display
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
