@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard da Empresa - Recrear Ômega</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Chewy&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #4ECDC4; /* Teal */
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar h2 {
+            font-family: 'Chewy', cursive;
+            font-size: 2.5em;
+            color: #FFC14F; /* Orange */
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .sidebar ul li a i {
+            margin-right: 10px;
+        }
+        .sidebar ul li a:hover,
+        .sidebar ul li.active a {
+            background-color: #3BBF9F; /* Darker Teal */
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            color: #FF6B6B; /* Reddish */
+            margin: 0;
+        }
+        .header .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .header .user-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid #4ECDC4;
+        }
+        .header .user-info span {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card .icon {
+            font-size: 2.5em;
+            color: #FFC14F; /* Orange */
+            margin-bottom: 15px;
+        }
+        .stat-card .value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #FF6B6B; /* Reddish */
+            margin-bottom: 5px;
+        }
+        .stat-card .label {
+            font-size: 1em;
+            color: #666;
+        }
+
+        .sections-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        .section-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            flex: 1;
+            min-width: 300px; /* Minimum width for each card */
+        }
+        .section-card h3 {
+            font-size: 1.8em;
+            color: #4ECDC4; /* Teal */
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .event-list, .recreator-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .event-item, .recreator-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .event-item:last-child, .recreator-item:last-child {
+            border-bottom: none;
+        }
+        .event-item .date-box {
+            background-color: #FF6B6B; /* Reddish */
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 600;
+            margin-right: 15px;
+            min-width: 60px;
+        }
+        .event-item .date-box .day {
+            font-size: 1.4em;
+            line-height: 1;
+        }
+        .event-item .date-box .month {
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+        .event-item .details {
+            flex-grow: 1;
+            text-align: left;
+        }
+        .event-item .details h4 {
+            margin: 0 0 5px 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .event-item .details p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #777;
+        }
+        .event-item .status-badge {
+            background-color: #A2D5F2; /* Light Blue */
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .event-item .status-badge.pending { background-color: #FFC14F; } /* Orange */
+        .event-item .status-badge.completed { background-color: #4ECDC4; color: white; } /* Teal */
+
+        .recreator-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 1px solid #ddd;
+        }
+        .recreator-item .details {
+            flex-grow: 1;
+            text-align: left;
+        }
+        .recreator-item .details h4 {
+            margin: 0 0 3px 0;
+            font-size: 1.1em;
+            color: #333;
+        }
+        .recreator-item .details p {
+            margin: 0;
+            font-size: 0.85em;
+            color: #777;
+        }
+        .recreator-item .rating {
+            color: #FFC14F; /* Orange */
+            font-size: 0.9em;
+        }
+        .recreator-item .rating i {
+            margin-left: 2px;
+        }
+
+        .add-button {
+            display: block;
+            width: calc(100% - 20px);
+            padding: 15px;
+            background-color: #FF6B6B;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .add-button:hover {
+            background-color: #E05F5F;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <h2>Recrear Ômega</h2>
+            <ul>
+                <li class="active"><a href="dashboard_empresa.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="meus_eventos.html"><i class="fas fa-calendar-alt"></i> Meus Eventos</a></li>
+                <li><a href="meus_recreadores.html"><i class="fas fa-user-friends"></i> Meus Recreadores</a></li>
+                <li><a href="publicar_evento.html"><i class="fas fa-plus-circle"></i> Publicar Evento</a></li>
+                <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
+                <li><a href="apresentacao.html#slide-how-it-works"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1>Dashboard da Empresa</h1>
+                <div class="user-info">
+                    <img src="https://via.placeholder.com/50/4ECDC4/FFFFFF?text=E" alt="Avatar da Empresa">
+                    <span>Empresa Feliz Ltda.</span>
+                </div>
+            </header>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="value">12</div>
+                    <div class="label">Eventos Concluídos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="value">3</div>
+                    <div class="label">Eventos Pendentes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-users"></i></div>
+                    <div class="value">25</div>
+                    <div class="label">Recreadores Conectados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-star"></i></div>
+                    <div class="value">4.8</div>
+                    <div class="label">Avaliação Média</div>
+                </div>
+            </section>
+
+            <section class="sections-container">
+                <div class="section-card">
+                    <h3>Próximos Eventos</h3>
+                    <ul class="event-list">
+                        <li class="event-item">
+                            <div class="date-box">
+                                <span class="day">15</span>
+                                <span class="month">jul</span>
+                            </div>
+                            <div class="details">
+                                <h4>Aniversário João - 5 anos</h4>
+                                <p>Local: Salão de Festas Alegria | Recreadores: 2</p>
+                            </div>
+                            <span class="status-badge pending">Pendente</span>
+                        </li>
+                        <li class="event-item">
+                            <div class="date-box">
+                                <span class="day">22</span>
+                                <span class="month">jul</span>
+                            </div>
+                            <div class="details">
+                                <h4>Festa da Escola Arco-Íris</h4>
+                                <p>Local: Escola Municipal | Recreadores: 5</p>
+                            </div>
+                            <span class="status-badge pending">Pendente</span>
+                        </li>
+                        <li class="event-item">
+                            <div class="date-box">
+                                <span class="day">01</span>
+                                <span class="month">ago</span>
+                            </div>
+                            <div class="details">
+                                <h4>Evento Corporativo - Família Feliz</h4>
+                                <p>Local: Clube do Povo | Recreadores: 3</p>
+                            </div>
+                            <span class="status-badge pending">Pendente</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="add-button"><i class="fas fa-plus-circle"></i> Publicar Novo Evento</a>
+                </div>
+
+                <div class="section-card">
+                    <h3>Recreadores Contratados Recentemente</h3>
+                    <ul class="recreator-list">
+                        <li class="recreator-item">
+                            <img src="https://via.placeholder.com/40/FF6B6B/FFFFFF?text=M" alt="Avatar do Recreador">
+                            <div class="details">
+                                <h4>Maria Brincante</h4>
+                                <p>Especialidade: Pintura Facial, Brincadeiras Musicais</p>
+                            </div>
+                            <div class="rating">
+                                <i class="fas fa-star"></i> 4.9
+                            </div>
+                        </li>
+                        <li class="recreator-item">
+                            <img src="https://via.placeholder.com/40/4ECDC4/FFFFFF?text=J" alt="Avatar do Recreador">
+                            <div class="details">
+                                <h4>João Alegria</h4>
+                                <p>Especialidade: Mágico, Contação de Histórias</p>
+                            </div>
+                            <div class="rating">
+                                <i class="fas fa-star"></i> 4.7
+                            </div>
+                        </li>
+                        <li class="recreator-item">
+                            <img src="https://via.placeholder.com/40/FFC14F/FFFFFF?text=A" alt="Avatar do Recreador">
+                            <div class="details">
+                                <h4>Ana Divertida</h4>
+                                <p>Especialidade: Esculturas de Balão, Jogos Lúdicos</p>
+                            </div>
+                            <div class="rating">
+                                <i class="fas fa-star"></i> 4.8
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="#" class="add-button"><i class="fas fa-search"></i> Buscar Recreadores</a>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
